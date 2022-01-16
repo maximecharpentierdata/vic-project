@@ -28,14 +28,14 @@ def download_url(url, output_path):
 
 
 def prepare_data():
-    url = "http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtrainval_06-Nov-2007.tar"
-    download_url(url, "./VOCtrainval_06-Nov-2007.tar")
-    with tarfile.open("./VOCtrainval_06-Nov-2007.tar") as tar_file:
+    url = "http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar"
+    download_url(url, "./VOCtrainval_11-May-2012.tar")
+    with tarfile.open("./VOCtrainval_11-May-2012.tar") as tar_file:
         tar_file.extractall("./")
 
-    shutil.move("./VOCdevkit/VOC2007", RAW_DATA_PATH)
-    os.remove("./VOCtrainval_06-Nov-2007.tar")
-    shutil.rmtree("./VOCdevkit")
+    shutil.move("./VOCdevkit/VOC2012", RAW_DATA_PATH)
+    # os.remove("./VOCtrainval_11-May-2012.tar")
+    # shutil.rmtree("./VOCdevkit")
 
 
 def get_cat_pictures():
