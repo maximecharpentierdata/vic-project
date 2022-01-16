@@ -21,14 +21,15 @@ class DownloadProgressBar(tqdm):
 
 
 def download_url(url, output_path):
-    with DownloadProgressBar(unit='B', unit_scale=True,
-                             miniters=1, desc=url.split('/')[-1]) as t:
+    with DownloadProgressBar(
+        unit="B", unit_scale=True, miniters=1, desc=url.split("/")[-1]
+    ) as t:
         urllib.request.urlretrieve(url, filename=output_path, reporthook=t.update_to)
 
 
 def prepare_data():
     url = "http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtrainval_06-Nov-2007.tar"
-    download_url(url, './VOCtrainval_06-Nov-2007.tar')
+    download_url(url, "./VOCtrainval_06-Nov-2007.tar")
     with tarfile.open("./VOCtrainval_06-Nov-2007.tar") as tar_file:
         tar_file.extractall("./")
 
@@ -67,20 +68,10 @@ def prepare_label_dataset(cat_pictures, dog_pictures):
     cat_pictures = list(cat_pictures)
     dog_pictures = list(dog_pictures)
 
-    labels = pd.DataFrame(
-        dict(
-            path = cat_pictures,
-            label = ["cat"] * len(cat_pictures)
-        )
-    )
+    labels = pd.DataFrame(dict(path=cat_pictures, label=["cat"] * len(cat_pictures)))
 
     labels = labels.append(
-        pd.DataFrame(
-            dict(
-                path=dog_pictures,
-                label = ["dog"] * len(dog_pictures)
-            )
-        )
+        pd.DataFrame(dict(path=dog_pictures, label=["dog"] * len(dog_pictures)))
     )
     labels = labels.sample(frac=1, random_state=42)
     labels.to_csv(FINAL_DATA_PATH / "labels.csv", index=False)
@@ -92,7 +83,9 @@ if __name__ == "__main__":
     cat_pictures = get_cat_pictures()
     dog_pictures = get_dog_pictures()
 
-    cat_pictures, dog_pictures = cat_pictures.difference(dog_pictures), dog_pictures.difference(cat_pictures)
+    cat_pictures, dog_pictures = cat_pictures.difference(
+        dog_pictures
+    ), dog_pictures.difference(cat_pictures)
 
     prepare_image_dataset(cat_pictures, dog_pictures)
     prepare_label_dataset(cat_pictures, dog_pictures)
