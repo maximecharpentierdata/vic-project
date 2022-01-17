@@ -89,4 +89,4 @@ if __name__ == "__main__":
     )
 
     model = run_classification(X_train, y_train, params["classification_model"])
-    evaluate_model(model)
+    evaluate_model(model, X_train, y_train, X_test, y_test)

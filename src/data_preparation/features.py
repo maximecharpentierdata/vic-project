@@ -6,7 +6,10 @@ from tqdm import tqdm
 import pandas as pd
 
 
-def make_clustering(descriptors, n_clusters, method="kmeans"):
+def make_clustering(descriptors_list, n_clusters, method="kmeans"):
+    descriptors_input = []
+    for descriptors in descriptors_list:
+        descriptors_input += list(descriptors)
     if method == "kmeans":
         clustering_model = KMeans(n_clusters=n_clusters)
         clustering_model.fit(descriptors)
