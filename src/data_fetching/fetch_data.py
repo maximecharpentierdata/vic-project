@@ -9,8 +9,8 @@ import tarfile
 
 RAW_DATA_PATH = pathlib.Path("./data/raw/")
 RAW_IMAGES_PATH = RAW_DATA_PATH / "JPEGImages"
-FINAL_DATA_PATH = pathlib.Path("./data/final/")
-FINAL_IMAGES_PATH = FINAL_DATA_PATH / "images"
+INTERIM_DATA_PATH = pathlib.Path("./data/interim/")
+INTERIM_IMAGES_PATH = INTERIM_DATA_PATH / "images"
 
 
 class DownloadProgressBar(tqdm):
@@ -34,8 +34,8 @@ def prepare_data():
         tar_file.extractall("./")
 
     shutil.move("./VOCdevkit/VOC2012", RAW_DATA_PATH)
-    # os.remove("./VOCtrainval_11-May-2012.tar")
-    # shutil.rmtree("./VOCdevkit")
+    os.remove("./VOCtrainval_11-May-2012.tar")
+    shutil.rmtree("./VOCdevkit")
 
 
 def get_cat_pictures():
@@ -58,10 +58,10 @@ def get_dog_pictures():
 
 def prepare_image_dataset(cat_pictures, dog_pictures):
     images = cat_pictures.union(dog_pictures)
-    if not FINAL_IMAGES_PATH.exists():
-        os.makedirs(FINAL_IMAGES_PATH)
+    if not INTERIM_IMAGES_PATH.exists():
+        os.makedirs(INTERIM_IMAGES_PATH)
     for image in images:
-        shutil.copy(RAW_IMAGES_PATH / image, FINAL_IMAGES_PATH / image)
+        shutil.copy(RAW_IMAGES_PATH / image, INTERIM_IMAGES_PATH / image)
 
 
 def prepare_label_dataset(cat_pictures, dog_pictures):
@@ -74,7 +74,7 @@ def prepare_label_dataset(cat_pictures, dog_pictures):
         pd.DataFrame(dict(path=dog_pictures, label=["dog"] * len(dog_pictures)))
     )
     labels = labels.sample(frac=1, random_state=42)
-    labels.to_csv(FINAL_DATA_PATH / "labels.csv", index=False)
+    labels.to_csv(INTERIM_DATA_PATH / "labels.csv", index=False)
 
 
 if __name__ == "__main__":
