@@ -14,6 +14,8 @@ def load_and_preprocess(image_path, segmentation_method="otsu"):
 def make_segmentation(image, method="otsu"):
     if method == "otsu":
         _, segmented_image = cv2.threshold(image, 127, 255, cv2.THRESH_OTSU)
+    elif method == "identity":
+        segmented_image = image
     else:
         raise NotImplementedError(f"{method} not implemented yet")
     return segmented_image
