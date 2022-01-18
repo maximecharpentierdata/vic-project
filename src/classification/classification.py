@@ -4,6 +4,7 @@ import pathlib
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegressionCV
+from sklearn.svm import SVC
 
 from src.data_preparation.pipeline import run_pipeline
 
@@ -51,6 +52,9 @@ def show_params(params):
 def run_classification(X_train, y_train, model_name):
     if model_name == "lr":
         model = LogisticRegressionCV(max_iter=1000, Cs=20)
+        model.fit(X_train, y_train)
+    elif model_name == "svm":
+        model = SVC()
         model.fit(X_train, y_train)
     return model
 
