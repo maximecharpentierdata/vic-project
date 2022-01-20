@@ -1,8 +1,7 @@
 import pathlib
-from sys import path
-import kaggle
 import os
 import shutil
+
 import pandas as pd
 from tqdm import tqdm
 

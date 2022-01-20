@@ -1,5 +1,5 @@
-import os
 import multiprocessing
+
 from sklearn.cluster import MiniBatchKMeans
 import numpy as np
 from tqdm import tqdm

@@ -3,8 +3,10 @@ import pathlib
 import pandas as pd
 import shutil
 import urllib.request
-from tqdm import tqdm
 import tarfile
+
+import pandas as pd
+from tqdm import tqdm
 
 RAW_DATA_PATH = pathlib.Path("./data/raw/")
 RAW_IMAGES_PATH = RAW_DATA_PATH / "JPEGImages"
