@@ -14,7 +14,10 @@ from src.data_preparation.features import (
 def run_pipeline(params):
     print("Making segmentation & computing descriptors...")
     descriptors_list = run_preprocessing(
-        params["images_path"], params["descriptors_proportion"]
+        params["images_path"],
+        params["descriptors_proportion"],
+        params["segmentation"],
+        params["n_data"],
     )
 
     print("Making clustering...")
@@ -39,7 +42,9 @@ def run_pipeline(params):
     features = extract_features(descriptors_list, clustering_model)
 
     labels = pd.read_csv(params["labels_path"])
-    final_df = make_final_df(params["images_path"], features, labels)
+    final_df = make_final_df(features, labels)
+    if not params["final_data_path"].exists():
+        os.makedirs(params["final_data_path"])
     final_df.to_csv(
         params["final_data_path"]
         / f"df_{params['clustering_method']}_{params['n_clusters']}_{params['segmentation']}.csv",

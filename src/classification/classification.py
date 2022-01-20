@@ -5,11 +5,14 @@ from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.svm import SVC
+from sklearn.model_selection import GridSearchCV
+import numpy as np
 
 from src.data_preparation.pipeline import run_pipeline
 
 
 def prepare_data_for_training(final_df):
+    final_df = final_df.sample(frac=1, random_state=42)
     X = final_df.drop("label", axis=1)
     y = final_df["label"]
     scaler = preprocessing.StandardScaler().fit(X)
@@ -24,12 +27,16 @@ def prepare_data_for_training(final_df):
 def parse_arguments():
     argument_parser = argparse.ArgumentParser()
 
-    argument_parser.add_argument("--segmentation", type=str, default="otsi")
+    argument_parser.add_argument("--segmentation", type=str, default="otsu")
     argument_parser.add_argument("--descriptors_proportion", type=float, default=0.4)
     argument_parser.add_argument("--clustering_method", type=str, default="kmeans")
     argument_parser.add_argument("--n_clusters", type=int, default=25)
     argument_parser.add_argument("--classification_model", type=str, default="lr")
-    argument_parser.add_argument("--do_clustering", type=bool, default=True)
+    argument_parser.add_argument("--n_data", type=int, default=10000)
+    argument_parser.add_argument(
+        "--no_clustering", dest="no_clustering", action=argparse.BooleanOptionalAction
+    )
+    argument_parser.set_defaults(no_clustering=False)
 
     args = argument_parser.parse_args()
     return args
@@ -54,7 +61,10 @@ def run_classification(X_train, y_train, model_name):
         model = LogisticRegressionCV(max_iter=1000, Cs=20)
         model.fit(X_train, y_train)
     elif model_name == "svm":
-        model = SVC()
+        params = dict(
+            C=np.linspace(1e-5, 10, num=10),
+        )
+        model = GridSearchCV(SVC(), params, verbose=3)
         model.fit(X_train, y_train)
     return model
 
@@ -80,8 +90,9 @@ if __name__ == "__main__":
         descriptors_proportion=args.descriptors_proportion,
         clustering_method=args.clustering_method,
         n_clusters=args.n_clusters,
-        do_clustering=args.do_clustering,
+        do_clustering=not args.no_clustering,
         classification_model=args.classification_model,
+        n_data=args.n_data,
     )
 
     show_params(params)
@@ -89,7 +100,7 @@ if __name__ == "__main__":
     final_df = run_pipeline(params)
 
     X_train, X_test, y_train, y_test, scaler = prepare_data_for_training(
-        final_df.iloc[:, 1:]
+        final_df.drop("path", axis=1)
     )
 
     model = run_classification(X_train, y_train, params["classification_model"])
