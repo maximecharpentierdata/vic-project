@@ -4,6 +4,7 @@ import pathlib
 from joblib import dump
 import json
 import os
+import sys
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegressionCV
@@ -130,6 +131,7 @@ if __name__ == "__main__":
     args = parse_arguments()
 
     date = datetime.datetime.today().strftime("%m_%d_%H_%M_%S")
+    sys.stdout = open(f'{date}.txt', 'w')
 
     for n_clusters in [500, 1000, 2500, 5000]:
         params = dict(
@@ -150,3 +152,4 @@ if __name__ == "__main__":
             date=date,
         )
         main(params)
+    sys.stdout.close()
