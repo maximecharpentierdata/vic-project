@@ -4,7 +4,6 @@ import pathlib
 from joblib import dump
 import json
 import os
-import sys
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegressionCV
@@ -67,9 +66,9 @@ def run_classification(X_train, y_train, model_name):
         model.fit(X_train, y_train)
     elif model_name == "svm":
         params = dict(
-            C=np.linspace(1e-5, 10, num=10),
+            C=np.linspace(1e-3, 10, num=5),
         )
-        model = GridSearchCV(SVC(), params, verbose=3)
+        model = GridSearchCV(SVC(), params, verbose=3, n_jobs=20)
         model.fit(X_train, y_train)
     return model
 
@@ -110,7 +109,6 @@ def main(params):
     X_scaled, y = prepare_data_for_training(
         final_df.drop("path", axis=1), params["binary"]
     )
-
         
     X_train, X_test, y_train, y_test = train_test_split(
         X_scaled, y, test_size=1 / 3, random_state=42
@@ -131,8 +129,6 @@ if __name__ == "__main__":
     args = parse_arguments()
 
     date = datetime.datetime.today().strftime("%m_%d_%H_%M_%S")
-    sys.stdout = open(f'{date}.txt', 'w')
-
     for n_clusters in [500, 1000, 2500, 5000]:
         params = dict(
             images_path=INTERIM_DATA_PATH / "images",
@@ -152,4 +148,3 @@ if __name__ == "__main__":
             date=date,
         )
         main(params)
-    sys.stdout.close()
