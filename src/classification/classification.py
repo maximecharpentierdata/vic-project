@@ -87,6 +87,7 @@ def save_experiment(model, clustering_model, final_df, params, date):
     params["labels_path"] = params["labels_path"].__str__()
     params["models_path"] = params["models_path"].__str__()
     params["final_data_path"] = params["final_data_path"].__str__()
+    params["experiments_path"] = params["experiments_path"].__str__()
 
     with open(path / "params.json", "w") as file:
         json.dump(params, file)
