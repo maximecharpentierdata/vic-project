@@ -20,7 +20,7 @@ def prepare_data_for_training(final_df, binary):
     y = final_df["label"]
     if binary:
         X_scaled = X > 1
-    else: 
+    else:
         X_scaled = X
     return X_scaled, y
 
@@ -81,7 +81,8 @@ def evaluate_model(model, X_train, y_train, X_test, y_test):
 
 def save_experiment(model, clustering_model, final_df, params, date):
     path = params["experiments_path"] / (date + f"_{params['classification_model']}")
-    os.makedirs(path)
+    if not path.exists():
+        os.makedirs(path)
 
     params["images_path"] = params["images_path"].__str__()
     params["labels_path"] = params["labels_path"].__str__()
@@ -109,7 +110,7 @@ def main(params):
     X_scaled, y = prepare_data_for_training(
         final_df.drop("path", axis=1), params["binary"]
     )
-        
+
     X_train, X_test, y_train, y_test = train_test_split(
         X_scaled, y, test_size=1 / 3, random_state=42
     )
@@ -134,7 +135,7 @@ if __name__ == "__main__":
             images_path=INTERIM_DATA_PATH / "images",
             labels_path=INTERIM_DATA_PATH / "labels.csv",
             models_path=MODELS_PATH,
-            experiments_path = EXPERIMENTS_PATH,
+            experiments_path=EXPERIMENTS_PATH,
             final_data_path=CACHE_DATA_PATH,
             segmentation=args.segmentation,
             descriptors_proportion=args.descriptors_proportion,
