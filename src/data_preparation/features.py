@@ -11,7 +11,7 @@ def make_clustering(descriptors_dict, n_clusters, method="kmeans"):
     for descriptors in descriptors_dict:
         descriptors_input += list(descriptors_dict[descriptors])
     descriptors_input = np.array(descriptors_input)
-    print(descriptors_input.shape)
+    print(f"Descriptors shape: {descriptors_input.shape}")
     if method == "kmeans":
         clustering_model = MiniBatchKMeans(
             n_clusters=n_clusters,

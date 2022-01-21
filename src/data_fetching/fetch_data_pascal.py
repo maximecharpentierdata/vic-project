@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 RAW_DATA_PATH = pathlib.Path("./data/raw/")
 RAW_IMAGES_PATH = RAW_DATA_PATH / "JPEGImages"
-INTERIM_DATA_PATH = pathlib.Path("./data/interim/")
+INTERIM_DATA_PATH = pathlib.Path("./data/pascal/")
 INTERIM_IMAGES_PATH = INTERIM_DATA_PATH / "images"
 
 
