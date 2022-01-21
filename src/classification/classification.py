@@ -7,12 +7,11 @@ import os
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegressionCV
-from sklearn.svm import SVC
+from sklearn.svm import SVC, LinearSVC
 from sklearn.model_selection import GridSearchCV
 import numpy as np
 
 from src.data_preparation.pipeline import run_pipeline
-
 
 
 def prepare_data_for_training(final_df, binary):
@@ -68,7 +67,7 @@ def run_classification(X_train, y_train, model_name):
         params = dict(
             C=np.linspace(1e-3, 10, num=5),
         )
-        model = GridSearchCV(SVC(), params, verbose=3, n_jobs=20)
+        model = GridSearchCV(LinearSVC(), params, verbose=3, n_jobs=20)
         model.fit(X_train, y_train)
     return model
 
