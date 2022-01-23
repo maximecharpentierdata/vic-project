@@ -67,7 +67,7 @@ def run_classification(X_train, y_train, model_name):
         params = dict(
             C=np.linspace(1e-3, 10, num=5),
         )
-        model = GridSearchCV(LinearSVC(), params, verbose=3, n_jobs=20)
+        model = GridSearchCV(SVC(), params, verbose=3, n_jobs=20)
         model.fit(X_train, y_train)
     return model
 
@@ -80,7 +80,7 @@ def evaluate_model(model, X_train, y_train, X_test, y_test):
 
 
 def save_experiment(model, clustering_model, final_df, params, date):
-    path = params["experiments_path"] / (date + f"_{params['classification_model']}")
+    path = params["experiments_path"] / (date + f"_{params['classification_model']}_nclusters_{params['n_clusters']}_no_binary")
     if not path.exists():
         os.makedirs(path)
 
@@ -130,7 +130,7 @@ if __name__ == "__main__":
     args = parse_arguments()
 
     date = datetime.datetime.today().strftime("%m_%d_%H_%M_%S")
-    for n_clusters in [500, 1000, 2500, 5000]:
+    for n_clusters in [500, 800, 1500, 2000]:
         params = dict(
             images_path=INTERIM_DATA_PATH / "images",
             labels_path=INTERIM_DATA_PATH / "labels.csv",

@@ -4,10 +4,22 @@ Computer vision academic project
 
 ## Data fetching
 
+### Training data
+
 Run:
 
 ```
-python src/data_fetching/fetch_data.py
+python src/data_fetching/fetch_data_kaggle.py
+```
+
+This download the dog vs cat Kaggle Dataset.
+
+### PASCAL dataset
+
+Run:
+
+```
+python src/data_fetching/fetch_data_pascal.py
 ```
 
 This will download the PASCAL VOC 2007 data, and prepare the directories as needed for the image classification pipeline.
@@ -19,18 +31,16 @@ We explore object detection through the simpler problem of image classification 
 You can run the classification script at `src/classification/classification.py` as followed:
 
 ```
-usage: classification.py [-h] [--segmentation SEGMENTATION]
-                         [--descriptors_proportion DESCRIPTORS_PROPORTION]
-                         [--clustering_method CLUSTERING_METHOD] [--n_clusters N_CLUSTERS]
-                         [--classification_model CLASSIFICATION_MODEL]
-                         [--do_clustering DO_CLUSTERING]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --segmentation SEGMENTATION
-  --descriptors_proportion DESCRIPTORS_PROPORTION
-  --clustering_method CLUSTERING_METHOD
-  --n_clusters N_CLUSTERS
-  --classification_model CLASSIFICATION_MODEL
-  --do_clustering DO_CLUSTERING
+usage: classification.py [-h] [--segmentation SEGMENTATION] [--descriptors_proportion DESCRIPTORS_PROPORTION]
+                         [--clustering_method CLUSTERING_METHOD] [--classification_model CLASSIFICATION_MODEL] [--n_data N_DATA]
+                         [--no_clustering | --no-no_clustering] [--use_df | --no-use_df] [--binary | --no-binary]
 ```
+
+## Check results
+
+Experiments are saved at `experiments/`. You can run result exploration on both dataset with `src/results.py` and saving it in a `.txt` file:
+
+```
+python -m src.results > results.txt
+```
+
