@@ -80,7 +80,10 @@ def evaluate_model(model, X_train, y_train, X_test, y_test):
 
 
 def save_experiment(model, clustering_model, final_df, params, date):
-    path = params["experiments_path"] / (date + f"_{params['classification_model']}_nclusters_{params['n_clusters']}_no_binary")
+    path = params["experiments_path"] / (
+        date
+        + f"_{params['classification_model']}_nclusters_{params['n_clusters']}_no_binary"
+    )
     if not path.exists():
         os.makedirs(path)
 

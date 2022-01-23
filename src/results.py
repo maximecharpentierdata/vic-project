@@ -1,7 +1,6 @@
 import pathlib
 from joblib import load
 import json
-import sys
 import os
 
 import pandas as pd
@@ -18,13 +17,16 @@ def load_model(experiment_path):
     model = load(experiment_path / "model.joblib")
     return model
 
+
 def load_clustering_model(experiment_path):
     clustering_model = load(experiment_path / "clustering_model.joblib")
     return clustering_model
 
+
 def load_final_df(experiment_path):
     final_df = pd.read_csv(experiment_path / "final_df.csv")
     return final_df
+
 
 def load_params(experiment_path):
     with open(experiment_path / "params.json") as file:
@@ -40,11 +42,19 @@ def show_matrix(y_pred, y):
 
 def show_metrics(confusion_matrix_):
     accuracy = np.trace(confusion_matrix_) / np.sum(confusion_matrix_)
-    cat_precision = confusion_matrix_[0, 0] / (confusion_matrix_[0, 0] + confusion_matrix_[0, 1])
-    dog_precision = confusion_matrix_[1, 1] / (confusion_matrix_[1, 1] + confusion_matrix_[1, 0])
+    cat_precision = confusion_matrix_[0, 0] / (
+        confusion_matrix_[0, 0] + confusion_matrix_[0, 1]
+    )
+    dog_precision = confusion_matrix_[1, 1] / (
+        confusion_matrix_[1, 1] + confusion_matrix_[1, 0]
+    )
 
-    cat_recall = confusion_matrix_[0, 0] / (confusion_matrix_[0, 0] + confusion_matrix_[1, 0])
-    dog_recall = confusion_matrix_[1, 1] / (confusion_matrix_[1, 1] + confusion_matrix_[0, 1])
+    cat_recall = confusion_matrix_[0, 0] / (
+        confusion_matrix_[0, 0] + confusion_matrix_[1, 0]
+    )
+    dog_recall = confusion_matrix_[1, 1] / (
+        confusion_matrix_[1, 1] + confusion_matrix_[0, 1]
+    )
 
     average_precision = (cat_precision + dog_precision) / 2
 
@@ -71,7 +81,7 @@ def run_general(final_df, model, params):
         X_scaled, y, test_size=1 / 3, random_state=42
     )
     y_pred = model.predict(X_test)
-    
+
     confusion_matrix_ = show_matrix(y_pred, y_test)
     show_metrics(confusion_matrix_)
 
@@ -81,12 +91,14 @@ def run_pascal(model, clustering_model, params):
     images_path = pascal_path / "images"
     labels_path = pascal_path / "labels.csv"
 
-    descriptors_dict = run_preprocessing(images_path, 1, "MSER", len(os.listdir(images_path)))
+    descriptors_dict = run_preprocessing(
+        images_path, 1, "MSER", len(os.listdir(images_path))
+    )
     features = extract_features(descriptors_dict, clustering_model)
 
     labels = pd.read_csv(labels_path)
     pascal_df = make_final_df(features, labels)
-    
+
     run_general(pascal_df, model, params)
 
 
