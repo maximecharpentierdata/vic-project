@@ -32,7 +32,26 @@ def prepare_data():
     url = "http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtrainval_06-Nov-2007.tar"
     download_url(url, "./VOCtrainval_06-Nov-2007.tar")
     with tarfile.open("./VOCtrainval_06-Nov-2007.tar") as tar_file:
-        tar_file.extractall("./")
+        def is_within_directory(directory, target):
+            
+            abs_directory = os.path.abspath(directory)
+            abs_target = os.path.abspath(target)
+        
+            prefix = os.path.commonprefix([abs_directory, abs_target])
+            
+            return prefix == abs_directory
+        
+        def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+        
+            for member in tar.getmembers():
+                member_path = os.path.join(path, member.name)
+                if not is_within_directory(path, member_path):
+                    raise Exception("Attempted Path Traversal in Tar File")
+        
+            tar.extractall(path, members, numeric_owner=numeric_owner) 
+            
+        
+        safe_extract(tar_file, "./")
 
     shutil.move("./VOCdevkit/VOC2007", RAW_DATA_PATH)
     os.remove("./VOCtrainval_06-Nov-2007.tar")
